@@ -1,0 +1,169 @@
+#####printing the triangle information un a sorted order.....
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+// Structure to store triangle information
+struct Triangle {
+    int a, b, c;  // sides
+    double area;   // to store area
+};
+
+// Function to calculate area using Heron's formula
+double calculateArea(int a, int b, int c) {
+    double s = (a + b + c) / 2.0;
+    return sqrt(s * (s - a) * (s - b) * (s - c));
+}
+
+// Comparison function for qsort
+int compare(const void* v1, const void* v2) {
+    struct Triangle *t1 = (struct Triangle *)v1;
+    struct Triangle *t2 = (struct Triangle *)v2;
+    
+    if (t1->area < t2->area) return -1;
+    if (t1->area > t2->area) return 1;
+    return 0;
+}
+
+int main() {
+    int n;
+    printf("Enter number of triangles: ");
+    scanf("%d", &n);
+    
+    // Array of triangles
+    struct Triangle tr[n];
+    
+    // Input triangles
+    for(int i = 0; i < n; i++) {
+        printf("Enter sides of triangle %d: ", i+1);
+        scanf("%d %d %d", &tr[i].a, &tr[i].b, &tr[i].c);
+        // Calculate area
+        tr[i].area = calculateArea(tr[i].a, tr[i].b, tr[i].c);
+    }
+    
+    // Sort triangles based on area
+    qsort(tr, n, sizeof(struct Triangle), compare);
+    
+    // Print sorted triangles
+    printf("\nTriangles sorted by area:\n");
+    for(int i = 0; i < n; i++) {
+        printf("Triangle sides: %d %d %d (Area: %.2f)\n", 
+               tr[i].a, tr[i].b, tr[i].c, tr[i].area);
+    }
+    
+    return 0;
+}
+#output:
+Enter number of triangles: 2
+Enter sides of triangle 1: 2
+3
+4
+Enter sides of triangle 2: 1
+1
+1
+
+Triangles sorted by area:
+Triangle sides: 1 1 1 (Area: 0.43)
+Triangle sides: 2 3 4 (Area: 2.90)
+
+####2.number into words
+
+#include <stdio.h>
+
+void displayDigitInWords(int digit) {
+    switch (digit) {
+        case 0: printf("Zero "); break;
+        case 1: printf("One "); break;
+        case 2: printf("Two "); break;
+        case 3: printf("Three "); break;
+        case 4: printf("Four "); break;
+        case 5: printf("Five "); break;
+        case 6: printf("Six "); break;
+        case 7: printf("Seven "); break;
+        case 8: printf("Eight "); break;
+        case 9: printf("Nine "); break;
+    }
+}
+
+void displayNumberInWords(int number) {
+    int digits[10], i = 0;
+
+    // Handle zero case
+    if (number == 0) {
+        displayDigitInWords(0);
+        return;
+    }
+
+    // Extract digits in reverse order
+    while (number > 0) {
+        digits[i++] = number % 10;
+        number /= 10;
+    }
+
+    // Print digits in correct order
+    for (int j = i - 1; j >= 0; j--) {
+        displayDigitInWords(digits[j]);
+    }
+}
+
+int main() {
+    int number;
+
+    printf("Enter a number: ");
+    scanf("%d", &number);
+
+    printf("Number in words: ");
+    displayNumberInWords(number);
+    printf("\n");
+
+    return 0;
+}
+
+###GAME
+#include <stdio.h>
+
+int main() {
+    int matchsticks = 21, user_pick, computer_pick;
+
+    printf("\n---MATCHSTICK GAME---\n");
+    printf("Total Matchsticks: 21\n");
+    printf("You can pick 1, 2, 3 or 4 matchsticks\n");
+    printf("The player who picks the last matchstick loses\n\n");
+
+    while (matchsticks > 1) {
+        // User's turn
+        do {
+            printf("\nMatchsticks remaining: %d\n", matchsticks);
+            printf("Your turn - Pick matchsticks (1-4): ");
+            scanf("%d", &user_pick);
+            
+            if (user_pick < 1 || user_pick > 4 || user_pick > matchsticks) {
+                printf("Invalid pick! Choose between 1 to 4 matchsticks\n");
+            }
+        } while (user_pick < 1 || user_pick > 4 || user_pick > matchsticks);
+
+        matchsticks -= user_pick;
+        
+        // Check if user picked the last matchstick
+        if (matchsticks == 1) {
+            printf("\nOnly 1 matchstick remaining...\n");
+            printf("Computer wins! You have to pick the last matchstick!\n");
+            break;
+        }
+        
+        // Computer's turn
+        // Winning strategy: Make sure to leave (5n + 1) matchsticks
+        computer_pick = 5 - user_pick;
+        
+        printf("Computer picks: %d matchstick(s)\n", computer_pick);
+        matchsticks -= computer_pick;
+        
+        if (matchsticks == 1) {
+            printf("\nOnly 1 matchstick remaining...\n");
+            printf("You must pick the last matchstick. Computer wins!\n");
+            break;
+        }
+    }
+    
+    return 0;
+}
